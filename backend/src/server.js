@@ -41,9 +41,13 @@ app.use((req, res) => {
 // Global error handler — must be last, after all routes
 app.use(errorHandler);
 
-// ─── Start ────────────────────────────────────────────────────────────────────
+// Export app separately so tests can import it without starting the server
+module.exports = app;
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+// Only start listening if this file is run directly, not when imported by tests
+if (require.main === module) {
+  const PORT = process.env.PORT || 5000;
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  });
+}
