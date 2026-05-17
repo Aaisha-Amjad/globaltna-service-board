@@ -1,0 +1,48 @@
+// User model — stores registered users who can post and delete jobs
+// Passwords are never stored as plain text — bcryptjs hashes them before saving
+
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
+
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Name is required"],
+      trim: true,
+    },
+
+    email: {
+      type: String,
+      required: [true, "Email is required"],
+      unique: true, // no two users can share the same email
+      lowercase: true,
+      trim: true,
+      match: [/^\S+@\S+\.\S+$/, "Please enter a valid email"],
+    },
+
+    password: {
+      type: String,
+      required: [true, "Password is required"],
+      minlength: [6, "Password must be at least 6 characters"],
+    },
+  },
+  {
+    timestamps: true,
+  },
+);
+
+// Runs automatically before every save — hashes the password if it was changed
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
+
+// Instance method — compares a plain text password against the stored hash
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+module.exports = mongoose.model("User", userSchema);
