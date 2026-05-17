@@ -15,6 +15,8 @@ const {
 } = require("../controllers/jobController");
 
 const validate = require("../middleware/validate");
+// Protect middleware — verifies JWT token before allowing access
+const protect = require("../middleware/protect");
 
 // Reusable validation rules for creating a job
 const createJobRules = [
@@ -45,8 +47,10 @@ const updateStatusRules = [
 
 router.get("/", getAllJobs);
 router.get("/:id", getJobById);
-router.post("/", createJobRules, validate, createJob);
-router.patch("/:id", updateStatusRules, validate, updateJobStatus);
-router.delete("/:id", deleteJob);
+
+// POST and DELETE are protected — only logged in users can create or delete jobs
+router.post("/", protect, createJobRules, validate, createJob);
+router.patch("/:id", protect, updateStatusRules, validate, updateJobStatus);
+router.delete("/:id", protect, deleteJob);
 
 module.exports = router;
