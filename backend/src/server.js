@@ -28,6 +28,9 @@ app.use(express.json());
 // All job-related routes live under /api/jobs
 app.use("/api/jobs", require("./routes/jobs"));
 
+// Auth routes — register and login live under /api/auth
+app.use("/api/auth", require("./routes/auth"));
+
 // Health check — useful for verifying the server is alive
 app.get("/health", (req, res) => {
   res.status(200).json({ success: true, message: "Server is running" });
