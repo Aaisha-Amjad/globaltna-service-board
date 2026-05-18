@@ -1,6 +1,3 @@
-// Home page — lists all job requests with category, status and keyword filters
-// Fetches fresh data on every page load (no caching) so status changes appear immediately
-
 "use client";
 
 import { useEffect, useState } from "react";
@@ -26,7 +23,6 @@ export default function HomePage() {
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
 
-  // Fetch jobs whenever filters change
   useEffect(() => {
     const fetchJobs = async () => {
       setLoading(true);
@@ -46,41 +42,76 @@ export default function HomePage() {
     setSearch(searchInput);
   };
 
+  const clearAll = () => {
+    setCategory("All");
+    setStatus("All");
+    setSearch("");
+    setSearchInput("");
+  };
+
   return (
     <div>
-      {/* Page header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
+      {/* Hero header */}
+      <div style={{ marginBottom: "40px" }}>
+        <h1
+          style={{
+            fontSize: "36px",
+            fontWeight: "800",
+            background: "linear-gradient(135deg, #f1f5f9, #94a3b8)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+            marginBottom: "8px",
+            lineHeight: "1.2",
+          }}
+        >
           Service Requests
         </h1>
-        <p className="text-gray-500">
-          Browse open requests from homeowners looking for tradespeople.
+        <p style={{ color: "var(--text-secondary)", fontSize: "15px" }}>
+          Browse open requests from homeowners looking for skilled tradespeople.
         </p>
       </div>
 
-      {/* Search bar */}
-      <form onSubmit={handleSearch} className="mb-6 flex gap-2">
+      {/* Search */}
+      <form
+        onSubmit={handleSearch}
+        style={{ display: "flex", gap: "10px", marginBottom: "20px" }}
+      >
         <input
           type="text"
-          placeholder="Search jobs by keyword..."
+          placeholder="Search by keyword..."
           value={searchInput}
           onChange={(e) => setSearchInput(e.target.value)}
-          className="flex-1 border border-gray-200 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          style={{ flex: 1 }}
         />
         <button
           type="submit"
-          className="bg-blue-600 text-white px-5 py-2.5 rounded-lg text-sm hover:bg-blue-700 transition-colors"
+          style={{
+            background: "var(--accent)",
+            color: "white",
+            border: "none",
+            padding: "10px 20px",
+            borderRadius: "8px",
+            cursor: "pointer",
+            fontSize: "14px",
+            fontWeight: "500",
+            whiteSpace: "nowrap",
+          }}
         >
           Search
         </button>
         {search && (
           <button
             type="button"
-            onClick={() => {
-              setSearch("");
-              setSearchInput("");
+            onClick={clearAll}
+            style={{
+              background: "transparent",
+              color: "var(--text-secondary)",
+              border: "1px solid var(--border)",
+              padding: "10px 16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontSize: "14px",
             }}
-            className="text-gray-500 px-3 py-2.5 border border-gray-200 rounded-lg text-sm hover:bg-gray-50"
           >
             Clear
           </button>
@@ -88,69 +119,139 @@ export default function HomePage() {
       </form>
 
       {/* Filters */}
-      <div className="flex gap-3 mb-8 flex-wrap">
+      <div
+        style={{
+          display: "flex",
+          gap: "10px",
+          marginBottom: "32px",
+          flexWrap: "wrap",
+          alignItems: "center",
+        }}
+      >
         <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
-          className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          style={{ width: "auto" }}
         >
           {CATEGORIES.map((c) => (
             <option key={c}>{c}</option>
           ))}
         </select>
-
         <select
           value={status}
           onChange={(e) => setStatus(e.target.value)}
-          className="border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
+          style={{ width: "auto" }}
         >
           {STATUSES.map((s) => (
             <option key={s}>{s}</option>
           ))}
         </select>
-
-        {/* Active filter count */}
         {(category !== "All" || status !== "All" || search) && (
           <button
-            onClick={() => {
-              setCategory("All");
-              setStatus("All");
-              setSearch("");
-              setSearchInput("");
+            onClick={clearAll}
+            style={{
+              background: "rgba(239,68,68,0.1)",
+              color: "var(--danger)",
+              border: "1px solid rgba(239,68,68,0.3)",
+              padding: "10px 16px",
+              borderRadius: "8px",
+              cursor: "pointer",
+              fontSize: "13px",
             }}
-            className="text-sm text-red-500 hover:text-red-700 px-3 py-2 border border-red-200 rounded-lg"
           >
             Clear filters
           </button>
         )}
       </div>
 
-      {/* Job listings */}
+      {/* Results */}
       {loading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+            gap: "16px",
+          }}
+        >
           {[...Array(6)].map((_, i) => (
             <div
               key={i}
-              className="bg-white rounded-xl border border-gray-200 p-5 animate-pulse"
+              style={{
+                background: "var(--bg-card)",
+                border: "1px solid var(--border)",
+                borderRadius: "12px",
+                padding: "20px",
+                animation: "pulse 1.5s infinite",
+              }}
             >
-              <div className="h-4 bg-gray-200 rounded mb-3 w-3/4" />
-              <div className="h-3 bg-gray-100 rounded mb-2" />
-              <div className="h-3 bg-gray-100 rounded w-2/3" />
+              <div
+                style={{
+                  height: "16px",
+                  background: "var(--border)",
+                  borderRadius: "4px",
+                  marginBottom: "12px",
+                  width: "70%",
+                }}
+              />
+              <div
+                style={{
+                  height: "12px",
+                  background: "var(--border)",
+                  borderRadius: "4px",
+                  marginBottom: "8px",
+                }}
+              />
+              <div
+                style={{
+                  height: "12px",
+                  background: "var(--border)",
+                  borderRadius: "4px",
+                  width: "50%",
+                }}
+              />
             </div>
           ))}
         </div>
       ) : jobs.length === 0 ? (
-        <div className="text-center py-20 text-gray-400">
-          <p className="text-5xl mb-4">🔍</p>
-          <p className="text-lg font-medium">No jobs found</p>
-          <p className="text-sm mt-1">Try adjusting your filters</p>
+        <div
+          style={{
+            textAlign: "center",
+            padding: "80px 20px",
+            color: "var(--text-muted)",
+          }}
+        >
+          <p style={{ fontSize: "48px", marginBottom: "16px" }}>🔍</p>
+          <p
+            style={{
+              fontSize: "18px",
+              fontWeight: "600",
+              color: "var(--text-secondary)",
+            }}
+          >
+            No jobs found
+          </p>
+          <p style={{ fontSize: "14px", marginTop: "8px" }}>
+            Try adjusting your filters or search terms
+          </p>
         </div>
       ) : (
         <>
-          <p className="text-sm text-gray-400 mb-4">
+          <p
+            style={{
+              fontSize: "13px",
+              color: "var(--text-muted)",
+              marginBottom: "16px",
+            }}
+          >
             {jobs.length} job{jobs.length !== 1 ? "s" : ""} found
           </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+              gap: "16px",
+            }}
+          >
             {jobs.map((job) => (
               <JobCard key={job._id} job={job} />
             ))}
