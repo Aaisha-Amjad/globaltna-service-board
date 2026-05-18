@@ -1,3 +1,4 @@
+
 // Auth routes — maps register and login endpoints to their controllers
 // Includes input validation before the request reaches the controller
 
