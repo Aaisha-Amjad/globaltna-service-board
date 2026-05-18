@@ -79,7 +79,7 @@ export default function Navbar() {
           <Link
             href="/"
             style={{
-              color: "var(--text-secondary)",
+              color: "#ef4444",
               textDecoration: "none",
               fontSize: "14px",
               transition: "color 0.2s",
@@ -104,7 +104,13 @@ export default function Navbar() {
               >
                 + Post Job
               </Link>
-              <span style={{ color: "var(--text-muted)", fontSize: "13px" }}>
+              <span
+                style={{
+                  color: "var(--text-primary)",
+                  fontSize: "13px",
+                  fontWeight: "500",
+                }}
+              >
                 Hi, {userName}
               </span>
               <button
