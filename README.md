@@ -4,6 +4,11 @@ A full-stack web application where homeowners can post service requests and trad
 
 Built as part of the GlobalTNA Full-Stack Developer Intern technical assessment.
 
+## Live URLs
+
+- **Frontend:** https://globaltna-service-board-two.vercel.app
+- **Backend:** https://globaltna-service-board-2ij2.onrender.com
+
 ---
 
 ## Tech Stack
