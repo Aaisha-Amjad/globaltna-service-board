@@ -1,10 +1,10 @@
 // New job form page — allows logged-in users to post a new service request
+// Redirects to login if no token found
 // Client-side validation runs before hitting the API
-// Redirects to home on success
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { createJob } from "@/lib/api";
 
@@ -23,10 +23,14 @@ export default function NewJobPage() {
     contactEmail: "",
   });
 
+  // Redirect to login if user is not authenticated
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) router.push("/login");
+  }, [router]);
+
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
@@ -35,7 +39,6 @@ export default function NewJobPage() {
     e.preventDefault();
     setError("");
 
-    // Client-side validation
     if (!form.title.trim()) return setError("Title is required");
     if (!form.description.trim()) return setError("Description is required");
     if (form.contactEmail && !/^\S+@\S+\.\S+$/.test(form.contactEmail)) {
@@ -56,18 +59,15 @@ export default function NewJobPage() {
 
   return (
     <div style={{ maxWidth: "640px", margin: "0 auto" }}>
-      {/* Header */}
       <div style={{ marginBottom: "32px" }}>
-        <h1
-          style={{
-            fontSize: "28px",
-            fontWeight: "800",
-            background: "linear-gradient(135deg, #f1f5f9, #94a3b8)",
-            WebkitBackgroundClip: "text",
-            WebkitTextFillColor: "transparent",
-            marginBottom: "8px",
-          }}
-        >
+        <h1 style={{
+          fontSize: "28px",
+          fontWeight: "800",
+          background: "linear-gradient(135deg, #f1f5f9, #94a3b8)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          marginBottom: "8px",
+        }}>
           Post a Service Request
         </h1>
         <p style={{ color: "var(--text-secondary)", fontSize: "14px" }}>
@@ -75,67 +75,36 @@ export default function NewJobPage() {
         </p>
       </div>
 
-      {/* Form card */}
-      <div
-        style={{
-          background: "var(--bg-card)",
-          border: "1px solid var(--border)",
-          borderRadius: "16px",
-          padding: "32px",
-        }}
-      >
-        <form
-          onSubmit={handleSubmit}
-          style={{ display: "flex", flexDirection: "column", gap: "20px" }}
-        >
-          {/* Error message */}
+      <div style={{
+        background: "var(--bg-card)",
+        border: "1px solid var(--border)",
+        borderRadius: "16px",
+        padding: "32px",
+      }}>
+        <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+
           {error && (
-            <div
-              style={{
-                background: "rgba(239,68,68,0.1)",
-                border: "1px solid rgba(239,68,68,0.3)",
-                color: "#ef4444",
-                padding: "12px 16px",
-                borderRadius: "8px",
-                fontSize: "14px",
-              }}
-            >
+            <div style={{
+              background: "rgba(239,68,68,0.1)",
+              border: "1px solid rgba(239,68,68,0.3)",
+              color: "#ef4444",
+              padding: "12px 16px",
+              borderRadius: "8px",
+              fontSize: "14px",
+            }}>
               {error}
             </div>
           )}
 
-          {/* Title */}
           <div>
-            <label
-              style={{
-                display: "block",
-                fontSize: "13px",
-                fontWeight: "500",
-                color: "var(--text-secondary)",
-                marginBottom: "6px",
-              }}
-            >
+            <label style={{ display: "block", fontSize: "13px", fontWeight: "500", color: "var(--text-secondary)", marginBottom: "6px" }}>
               Title <span style={{ color: "#ef4444" }}>*</span>
             </label>
-            <input
-              name="title"
-              value={form.title}
-              onChange={handleChange}
-              placeholder="e.g. Fix leaking kitchen tap"
-            />
+            <input name="title" value={form.title} onChange={handleChange} placeholder="e.g. Fix leaking kitchen tap" />
           </div>
 
-          {/* Description */}
           <div>
-            <label
-              style={{
-                display: "block",
-                fontSize: "13px",
-                fontWeight: "500",
-                color: "var(--text-secondary)",
-                marginBottom: "6px",
-              }}
-            >
+            <label style={{ display: "block", fontSize: "13px", fontWeight: "500", color: "var(--text-secondary)", marginBottom: "6px" }}>
               Description <span style={{ color: "#ef4444" }}>*</span>
             </label>
             <textarea
@@ -159,123 +128,42 @@ export default function NewJobPage() {
             />
           </div>
 
-          {/* Category + Location row */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "16px",
-            }}
-          >
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
             <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: "var(--text-secondary)",
-                  marginBottom: "6px",
-                }}
-              >
-                Category
-              </label>
-              <select
-                name="category"
-                value={form.category}
-                onChange={handleChange}
-              >
-                {CATEGORIES.map((c) => (
-                  <option key={c}>{c}</option>
-                ))}
+              <label style={{ display: "block", fontSize: "13px", fontWeight: "500", color: "var(--text-secondary)", marginBottom: "6px" }}>Category</label>
+              <select name="category" value={form.category} onChange={handleChange}>
+                {CATEGORIES.map((c) => <option key={c}>{c}</option>)}
               </select>
             </div>
             <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: "var(--text-secondary)",
-                  marginBottom: "6px",
-                }}
-              >
-                Location
-              </label>
-              <input
-                name="location"
-                value={form.location}
-                onChange={handleChange}
-                placeholder="e.g. Glasgow"
-              />
+              <label style={{ display: "block", fontSize: "13px", fontWeight: "500", color: "var(--text-secondary)", marginBottom: "6px" }}>Location</label>
+              <input name="location" value={form.location} onChange={handleChange} placeholder="e.g. Glasgow" />
             </div>
           </div>
 
-          {/* Contact Name + Email row */}
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: "16px",
-            }}
-          >
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
             <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: "var(--text-secondary)",
-                  marginBottom: "6px",
-                }}
-              >
-                Your Name
-              </label>
-              <input
-                name="contactName"
-                value={form.contactName}
-                onChange={handleChange}
-                placeholder="John Smith"
-              />
+              <label style={{ display: "block", fontSize: "13px", fontWeight: "500", color: "var(--text-secondary)", marginBottom: "6px" }}>Your Name</label>
+              <input name="contactName" value={form.contactName} onChange={handleChange} placeholder="John Smith" />
             </div>
             <div>
-              <label
-                style={{
-                  display: "block",
-                  fontSize: "13px",
-                  fontWeight: "500",
-                  color: "var(--text-secondary)",
-                  marginBottom: "6px",
-                }}
-              >
-                Email
-              </label>
-              <input
-                name="contactEmail"
-                type="email"
-                value={form.contactEmail}
-                onChange={handleChange}
-                placeholder="john@example.com"
-              />
+              <label style={{ display: "block", fontSize: "13px", fontWeight: "500", color: "var(--text-secondary)", marginBottom: "6px" }}>Email</label>
+              <input name="contactEmail" type="email" value={form.contactEmail} onChange={handleChange} placeholder="john@example.com" />
             </div>
           </div>
 
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            style={{
-              background: loading ? "var(--border)" : "var(--accent)",
-              color: "white",
-              border: "none",
-              padding: "14px",
-              borderRadius: "8px",
-              fontSize: "15px",
-              fontWeight: "600",
-              cursor: loading ? "not-allowed" : "pointer",
-              transition: "background 0.2s",
-              marginTop: "8px",
-            }}
-          >
+          <button type="submit" disabled={loading} style={{
+            background: loading ? "var(--border)" : "var(--accent)",
+            color: "white",
+            border: "none",
+            padding: "14px",
+            borderRadius: "8px",
+            fontSize: "15px",
+            fontWeight: "600",
+            cursor: loading ? "not-allowed" : "pointer",
+            transition: "background 0.2s",
+            marginTop: "8px",
+          }}>
             {loading ? "Posting..." : "Post Service Request"}
           </button>
         </form>
