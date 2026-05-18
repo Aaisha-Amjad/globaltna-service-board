@@ -151,13 +151,6 @@ Frontend runs on `http://localhost:3000`
 
 ---
 
-## Live URLs
-
-- **Frontend:** coming soon
-- **Backend:** coming soon
-
----
-
 ## Author
 
 Aaisha Amjad
