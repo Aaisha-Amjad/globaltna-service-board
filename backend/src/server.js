@@ -18,7 +18,17 @@ const app = express();
 // ─── Middleware ───────────────────────────────────────────────────────────────
 
 // Allows the Next.js frontend (different port) to call this API
-app.use(cors());
+// Allow requests from local dev and production Vercel frontend
+app.use(
+  cors({
+    origin: [
+      "http://localhost:3000",
+      "https://globaltna-service-board-two.vercel.app",
+      "https://globaltna-service-board.vercel.app",
+    ],
+    credentials: true,
+  }),
+);
 
 // Parses incoming JSON request bodies so req.body works
 app.use(express.json());
