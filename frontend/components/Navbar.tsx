@@ -1,6 +1,3 @@
-// Navbar — appears on every page
-// Shows login/logout based on whether a JWT token exists in localStorage
-
 "use client";
 
 import Link from "next/link";
@@ -13,13 +10,9 @@ export default function Navbar() {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    // Check localStorage for token on mount
     const token = localStorage.getItem("token");
     const name = localStorage.getItem("userName");
-    if (token) {
-      setIsLoggedIn(true);
-      setUserName(name || "");
-    }
+    if (token) { setIsLoggedIn(true); setUserName(name || ""); }
   }, []);
 
   const handleLogout = () => {
@@ -30,50 +23,90 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200 sticky top-0 z-50">
-      <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+    <nav style={{
+      background: "rgba(15,17,23,0.8)",
+      backdropFilter: "blur(12px)",
+      borderBottom: "1px solid var(--border)",
+      position: "sticky",
+      top: 0,
+      zIndex: 50,
+    }}>
+      <div style={{
+        maxWidth: "1200px",
+        margin: "0 auto",
+        padding: "0 24px",
+        height: "64px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+      }}>
         {/* Logo */}
-        <Link href="/" className="text-xl font-bold text-blue-600">
+        <Link href="/" style={{
+          fontSize: "20px",
+          fontWeight: "700",
+          background: "linear-gradient(135deg, #6366f1, #8b5cf6)",
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+          textDecoration: "none",
+        }}>
           GlobalTNA
         </Link>
 
         {/* Nav links */}
-        <div className="flex items-center gap-4">
-          <Link
-            href="/"
-            className="text-gray-600 hover:text-blue-600 transition-colors"
-          >
+        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+          <Link href="/" style={{
+            color: "var(--text-secondary)",
+            textDecoration: "none",
+            fontSize: "14px",
+            transition: "color 0.2s",
+          }}>
             Browse Jobs
           </Link>
 
           {isLoggedIn ? (
             <>
-              <Link
-                href="/jobs/new"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              >
+              <Link href="/jobs/new" style={{
+                background: "var(--accent)",
+                color: "white",
+                padding: "8px 16px",
+                borderRadius: "8px",
+                textDecoration: "none",
+                fontSize: "14px",
+                fontWeight: "500",
+              }}>
                 + Post Job
               </Link>
-              <span className="text-gray-500 text-sm">Hi, {userName}</span>
-              <button
-                onClick={handleLogout}
-                className="text-gray-600 hover:text-red-500 transition-colors text-sm"
-              >
+              <span style={{ color: "var(--text-muted)", fontSize: "13px" }}>
+                Hi, {userName}
+              </span>
+              <button onClick={handleLogout} style={{
+                background: "none",
+                border: "none",
+                color: "var(--text-secondary)",
+                cursor: "pointer",
+                fontSize: "13px",
+              }}>
                 Logout
               </button>
             </>
           ) : (
             <>
-              <Link
-                href="/login"
-                className="text-gray-600 hover:text-blue-600 transition-colors"
-              >
+              <Link href="/login" style={{
+                color: "var(--text-secondary)",
+                textDecoration: "none",
+                fontSize: "14px",
+              }}>
                 Login
               </Link>
-              <Link
-                href="/register"
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
-              >
+              <Link href="/register" style={{
+                background: "var(--accent)",
+                color: "white",
+                padding: "8px 16px",
+                borderRadius: "8px",
+                textDecoration: "none",
+                fontSize: "14px",
+                fontWeight: "500",
+              }}>
                 Register
               </Link>
             </>
