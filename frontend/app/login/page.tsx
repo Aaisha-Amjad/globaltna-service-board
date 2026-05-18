@@ -37,6 +37,7 @@ export default function LoginPage() {
     // Store token and user name for navbar
     localStorage.setItem("token", res.token);
     localStorage.setItem("userName", res.user.name);
+    window.dispatchEvent(new Event("authChange"));
     router.push("/");
     router.refresh();
   };
