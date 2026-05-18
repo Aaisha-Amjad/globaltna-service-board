@@ -1,20 +1,37 @@
-// Reusable status badge — displays job status with color coding
-// Open = green, In Progress = yellow, Closed = gray
-
 interface Props {
   status: "Open" | "In Progress" | "Closed";
 }
 
 export default function StatusBadge({ status }: Props) {
-  const styles = {
-    Open: "bg-green-100 text-green-700 border border-green-200",
-    "In Progress": "bg-yellow-100 text-yellow-700 border border-yellow-200",
-    Closed: "bg-gray-100 text-gray-600 border border-gray-200",
+  const styles: Record<string, React.CSSProperties> = {
+    Open: {
+      background: "rgba(16,185,129,0.15)",
+      color: "#10b981",
+      border: "1px solid rgba(16,185,129,0.3)",
+    },
+    "In Progress": {
+      background: "rgba(245,158,11,0.15)",
+      color: "#f59e0b",
+      border: "1px solid rgba(245,158,11,0.3)",
+    },
+    Closed: {
+      background: "rgba(71,85,105,0.3)",
+      color: "#94a3b8",
+      border: "1px solid rgba(71,85,105,0.4)",
+    },
   };
 
   return (
     <span
-      className={`text-xs font-medium px-2.5 py-1 rounded-full ${styles[status]}`}
+      style={{
+        ...styles[status],
+        fontSize: "11px",
+        fontWeight: "600",
+        padding: "3px 10px",
+        borderRadius: "20px",
+        whiteSpace: "nowrap",
+        letterSpacing: "0.3px",
+      }}
     >
       {status}
     </span>
